@@ -10,6 +10,7 @@ Features given below :
  
 It has a simple class RxMPusher which you can initialize with any data type as given below :
  
+
 let pusher:RxMPusher<String> = RxMPusher<String>()
  
 and then subscribe to listen to events like this:
@@ -44,7 +45,6 @@ r.start("https://jsonplaceholder.typicode.com/todos/1")
  
 Mapping an event from one type to other type :
   pusher.map{ val throws ->  Int  in
-                
                 if val == "A"{
                     return 2
                 }else if val == "B"{
