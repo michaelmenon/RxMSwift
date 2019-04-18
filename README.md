@@ -10,11 +10,13 @@ Features given below :
  
 It has a simple class RxMPusher which you can initialize with any data type as given below :
  
-
+```
 let pusher:RxMPusher<String> = RxMPusher<String>()
+```
  
 and then subscribe to listen to events like this:
- 
+
+```
 pusher.subscribe{ event in
             switch event {
                 case .next(let c):
@@ -24,14 +26,19 @@ pusher.subscribe{ event in
                 }
             
      
- 
+ ```
 Push the values to listeners like this :
+
+```
 pusher.push("A")
+
+```
  
 You can have multiple subscribers and each subscribers will get values asynchronously so not blocking the UI.
  
 Asynchronous Web API call : If you want to call a webservice API asynchronously just use the class RxMData provided:
  
+ ```
 let r:RxMData = RxMData()
 r.start("https://jsonplaceholder.typicode.com/todos/1")
             .subscribe{ event in
@@ -42,8 +49,11 @@ r.start("https://jsonplaceholder.typicode.com/todos/1")
                 print(err)
             }
         }
+```        
  
 Mapping an event from one type to other type :
+
+```
   pusher.map{ val throws ->  Int  in
                 if val == "A"{
                     return 2
@@ -61,7 +71,12 @@ Mapping an event from one type to other type :
               }
             }
  
+ ```
  
 Push error to subscribers in case of error events :
+
+```
 pusher.onError(RxMError.InvalidValue)
+
+```
  
