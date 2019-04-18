@@ -30,31 +30,35 @@ public class RxMPusher<E>:RxMObservableType{
     
     public func push(_ item:E){
         
-            DispatchQueue.global().async {[weak self] in
-                
-                guard self != nil else{return}
-                while !self!._lock.try(){}
-                defer {
-                    self!._lock.unlock()
-                }
-                dispatch(self!._observers, MEvent(item))
-               
-                
-            }
-    }
-    
-    public func onError(_ err:Swift.Error){
-        let errEvent = MEvent<E>(error:err)
-        DispatchQueue.global().async {[weak self] in
+        let cl = {[weak self,_observers] in
             
             guard self != nil else{return}
             while !self!._lock.try(){}
-            defer {
-                self!._lock.unlock()
-            }
-            dispatch(self!._observers, errEvent)
+            dispatch(_observers, MEvent(item))
+            self!._lock.unlock()
+        }
+        
+        DispatchQueue.global().sync {
             
+            cl()
+        }
+       
+    }
+    
+    public func onError(_ err:Swift.Error){
+       
+        let cl = {[weak self,_observers] in
+        
+            guard self != nil else{return}
+            while !self!._lock.try(){}
+            let errEvent = MEvent<E>(error:err)
+            dispatch(_observers, errEvent)
+             self!._lock.unlock()
+        }
+        
+        DispatchQueue.global().sync {
             
+            cl()
         }
         
     }
@@ -87,5 +91,8 @@ public class RxMPusher<E>:RxMObservableType{
    
     
 }
+
+
+
 
 
